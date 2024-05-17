@@ -93,7 +93,7 @@ const PopoverContent = ({ reserva }) => {
         "POST",
         body
       );
-      message.success("El reporte se ha enviado exitosamente");
+      message.success("El reporte se ha enviado exitosamenteeeeee");
       setTimeout(() => {
         window.location.reload();
       }, 800);
