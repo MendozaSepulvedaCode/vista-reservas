@@ -3,6 +3,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+ 
 }
 
 .search-cnt {
@@ -63,27 +64,34 @@ tr:hover {
 }
 
 .collapsible-content {
-  padding: 16px;
+  padding: 20px;
   background-color: #f9f9f9;
   border-top: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-around;
   align-items: center;
+ 
 }
 
 .tag-rs {
   display: inline-block;
-  margin-right: 8px;
-  padding: 8px 20px;
-  background-color: var(--green-color);
-  color: #fff;
+  padding: 10px 10px;
+  background-color: #f0f0f0;
+  color: #363636;
+  margin-top: 20px;
+  margin-right: 80px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .collapsible-content h5 {
   font-weight: 400;
   font-size: 15px;
-  max-width: 33%;
+  max-height: 53%;
   text-align: justify;
+  
 }
 
 .collapsible-content h5 span {
@@ -93,6 +101,7 @@ tr:hover {
 .cnt-btn-reservas {
   display: flex;
   flex-direction: row;
+  transform: translateX(50px)
 }
 
 .btn-aprobar-reservas {
@@ -102,6 +111,7 @@ tr:hover {
   border: none;
   cursor: pointer;
   color: #fff;
+  font-weight: 600;
 }
 
 .btn-aprobar-reservas:hover {
@@ -115,6 +125,7 @@ tr:hover {
   border: none;
   cursor: pointer;
   color: #fff;
+  font-weight: 600;
 }
 
 .btn-eliminar-reservas:hover {
