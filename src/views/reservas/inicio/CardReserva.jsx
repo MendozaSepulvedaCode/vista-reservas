@@ -1,19 +1,9 @@
 import "../../../styles/reservas/Principal/card.css";
-import { BiBookBookmark, BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import React, { useRef } from "react";
+import { BiBookBookmark, BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import Vacio from "./Vacio";
 
-function CardReserva() {
-  const cardsData = [];
-  for (let i = 1; i <= 10; i++) {
-    cardsData.push({
-      id: i,
-      name: "Jose Mendoza",
-      title: `A2-501-${i}`,
-      description: `09:00 - 0${i}:00`,
-      estado: "Terminado",
-    });
-  }
-
+function CardReserva({ allResState }) {
   const scrollContainerRef = useRef(null);
 
   const scrollLeft = () => {
@@ -63,6 +53,12 @@ function CardReserva() {
     requestAnimationFrame(animateScroll);
   };
 
+  const currentDate = new Date().toISOString().slice(0, 10);
+
+  const filteredReservas = allResState.Reservas_Aca.filter(
+    (reserva) => reserva.Fecha_Inicio.split(" ")[0] === currentDate
+  );
+
   return (
     <div className="cards-reservas-wrapper">
       <div className="scroll-buttons">
@@ -74,23 +70,29 @@ function CardReserva() {
         </button>
       </div>
       <div className="cards-reservas" ref={scrollContainerRef}>
-        {cardsData.map((card) => (
-          <div key={card.id} className="card-container">
-            <div className="card-content">
-              <div className="header-card">
-                <h3 className="card-title">{card.title}</h3>
-                <BiBookBookmark />
-              </div>
-              <div className="foot-card">
-                <p className="card-description">{card.description}</p>
-                <div className="ft-crd">
-                  <h5>{card.name}</h5>
-                  <div className="estado-color">{card.estado}</div>
+        {filteredReservas.length > 0 ? (
+          filteredReservas.map((reserva, index) => (
+            <div key={index} className="card-container">
+              <div className="card-content">
+                <div className="header-card">
+                  <h3 className="card-title">{reserva.Espacio}</h3>
+                  <BiBookBookmark />
+                </div>
+                <div className="foot-card">
+                  <p className="card-description">
+                    {reserva.Fecha_Inicio.split(" ")[1]}
+                  </p>
+                  <div className="ft-crd">
+                    <h5>{reserva.Nombre}</h5>
+                    <div className="estado-color">{reserva.Estado}</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <Vacio />
+        )}
       </div>
     </div>
   );

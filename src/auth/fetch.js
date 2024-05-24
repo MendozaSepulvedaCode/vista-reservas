@@ -1,8 +1,5 @@
 import Cookies from "universal-cookie";
-import * as msal from "@azure/msal-browser";
 import {
-  myMSALObj,
-  loginRequest,
   getTokenPopup,
   getTokenRedirect,
 } from "./authConfig";

@@ -2,21 +2,13 @@ import "../../../styles/reservas/Principal/auxiliar.css";
 import { peticionForm } from "../../../utils/peticiones";
 import React, { useEffect, useState } from "react";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { BiCalendarCheck, BiSolidInbox, BiBuildings } from "react-icons/bi";
+import { BiCalendarCheck, BiBuildings } from "react-icons/bi";
 import { LuUsers } from "react-icons/lu";
 import { message, Popover, Input } from "antd";
-import CardPropia from './CardPropia'
+import CardPropia from "./CardPropia";
+import Vacio from './Vacio'
 
 const { TextArea } = Input;
-
-const Vacio = () => {
-  return (
-    <div className="cnt-vacio">
-      <BiSolidInbox />
-      <h5>No hay elementos</h5>
-    </div>
-  );
-};
 
 function Historial({ reserva }) {
   const [visible, setVisible] = useState(false);

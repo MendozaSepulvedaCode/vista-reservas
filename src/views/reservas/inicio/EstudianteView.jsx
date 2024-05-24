@@ -6,15 +6,7 @@ import CardPropia from "./CardPropia";
 import { message } from "antd";
 import { BiBadgeCheck, BiBuildings, BiTime } from "react-icons/bi";
 import { LuUsers } from "react-icons/lu";
-
-const Vacio = () => {
-  return (
-    <div className="cnt-vacio">
-      <BiSolidInbox />
-      <h5>No hay elementos</h5>
-    </div>
-  );
-};
+import Vacio from './Vacio'
 
 function Historial({ reserva }) {
   const fechaInicio = new Date(reserva.Fh_Fin);
@@ -67,6 +59,7 @@ function EstudianteView() {
             reserva.Estado === "Aprobada"
         );
 
+        console.log(reservasActivas);
         setReservasActivas(reservasActivas);
         setReservas(historialReservas);
       } catch (error) {

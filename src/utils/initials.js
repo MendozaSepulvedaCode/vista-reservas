@@ -3,9 +3,9 @@ export function obtenerIniciales(nombre) {
 
   let iniciales = "";
 
-  palabras.forEach((palabra) => {
-    iniciales += palabra.charAt(0).toUpperCase();
-  });
+  for (let i = 0; i < 2 && i < palabras.length; i++) {
+    iniciales += palabras[i].charAt(0).toUpperCase();
+  }
 
   return iniciales;
 }

@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import { message } from "antd";
 import "../../../styles/reservas/Principal/contenido.css";
+import { peticionForm } from "../../../utils/peticiones";
 
-const TablaReservas = () => {
-  const [reservas, setReservas] = useState(
-    Array.from({ length: 20 }, (_, index) => ({
-      id: index + 1,
-      salon: `A2-40${index + 1}`,
-      nombreSolicitante: `Solicitante ${index + 1}`,
-      aforo: `5${index + 1}`,
-      fecha: "08/09/2023",
-      entrada: "09:00 AM",
-      salida: "11:00 AM",
-      profesorACargo: "Rafael Monterroza",
-      codigo: `ABC${index + 1}`,
-      estado: "Pendiente",
-      descripcion:
-        "Me gustaría reservar este salón para estudiar cálculo durante varias horas. Necesito un espacio tranquilo y bien iluminado para concentrarme en mis estudios. Además, planeo repasar varios temas y realizar algunas prácticas. Agradezco la oportunidad de utilizar este espacio y estoy comprometido a mantenerlo en condiciones óptimas. ¡Gracias!",
-    }))
-  );
+const TablaReservas = ({ allResState }) => {
+  const reservasAca = allResState.Reservas_Aca || [];
+  const reservasNAca = allResState.Reservas_NAca || [];
+
+  const hayReservasNAca =
+    Array.isArray(reservasNAca) && reservasNAca.length > 0;
+
+  const reservasAMostrar = hayReservasNAca
+    ? [...reservasAca, ...reservasNAca]
+    : reservasAca;
+
+  const longitudReservas = hayReservasNAca
+    ? reservasAMostrar.length
+    : reservasAca.length;
+
+  const [reservas, setReservas] = useState(reservasAMostrar);
 
   const getStatusColor = (estado) => {
     switch (estado) {
@@ -40,24 +40,25 @@ const TablaReservas = () => {
       setExpandedRow(expandedRow === rowId ? null : rowId);
     };
 
-    const aprobarReserva = (id) => {
-      setReservas((prevReservas) =>
-        prevReservas.map((reserva) =>
-          reserva.id === id ? { ...reserva, estado: "Aprobada" } : reserva
-        )
-      );
-      message.success("Reserva aprobada");
-      manejoAcordion(null);
-    };
-
-    const rechazarReserva = (id) => {
-      setReservas((prevReservas) =>
-        prevReservas.map((reserva) =>
-          reserva.id === id ? { ...reserva, estado: "Rechazada" } : reserva
-        )
-      );
-      message.error("Reserva rechazada");
-      manejoAcordion(null);
+    const estadoReserva = async (reservaId, status) => {
+      let body = {
+        Estado: status,
+      };
+      try {
+        const response = await peticionForm(
+          `https://www.sire.software/admin/cambiar_estado/${reservaId}`,
+          "PATCH",
+          body
+        );
+        message.success("Se cambio el estado de la reserva con exito");
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+        return response;
+      } catch (error) {
+        console.error("Error al cambiar el estado de la reserva:", error);
+        message.error("Error al cambiar el estado de la reserva");
+      }
     };
 
     return (
@@ -72,64 +73,82 @@ const TablaReservas = () => {
             <th>Entrada</th>
             <th>Salida</th>
             <th>Académico</th>
-            <th>Código</th>
             <th>Estado</th>
           </tr>
         </thead>
         <tbody>
-          {reservas.map((reserva) => (
-            <React.Fragment key={reserva.id}>
+          {reservas.map((reserva, index) => (
+            <React.Fragment key={index}>
               <tr
-                onClick={() => manejoAcordion(reserva.id)}
-                className={expandedRow === reserva.id ? "active-row" : ""}
+                onClick={() => manejoAcordion(reserva.ID_Reserva)}
+                className={
+                  expandedRow === reserva.ID_Reserva ? "active-row" : ""
+                }
               >
-                <td>{reserva.id}</td>
-                <td>{reserva.salon}</td>
-                <td>{reserva.nombreSolicitante}</td>
-                <td>{reserva.aforo}</td>
-                <td>{reserva.fecha}</td>
-                <td>{reserva.entrada}</td>
-                <td>{reserva.salida}</td>
-                <td>{reserva.profesorACargo}</td>
-                <td>{reserva.codigo}</td>
+                <td>{index + 1}</td>
+                <td>{reserva.Espacio}</td>
+                <td>{reserva.Nombre}</td>
+                <td>{reserva.Aforo}</td>
+                <td>
+                  {reserva.Fecha_Inicio
+                    ? reserva.Fecha_Inicio.split(" ")[0]
+                    : ""}
+                </td>
+                <td>
+                  {reserva.Fecha_Inicio
+                    ? reserva.Fecha_Inicio.split(" ")[1]
+                    : ""}
+                </td>
+                <td>
+                  {reserva.Fecha_Fin ? reserva.Fecha_Fin.split(" ")[1] : ""}
+                </td>
+                <td>
+                  {reserva.Nombre_Docente !== null &&
+                  reserva.Nombre_Docente !== undefined
+                    ? reserva.Nombre_Docente
+                    : "No Aplica"}
+                </td>
                 <td
                   style={{
                     fontWeight: "bold",
-                    color: getStatusColor(reserva.estado),
+                    color: getStatusColor(reserva.Estado),
                   }}
                 >
-                  {expandedRow === reserva.id ? (
-                    <span>{reserva.estado}</span>
+                  {expandedRow === reserva.ID_Reserva ? (
+                    <span>{reserva.Estado}</span>
                   ) : (
-                    reserva.estado
+                    reserva.Estado
                   )}
                 </td>
               </tr>
-              {expandedRow === reserva.id && (
+              {expandedRow === reserva.ID_Reserva && (
                 <tr>
                   <td colSpan="11">
                     <div className="collapsible-content">
                       <p>
                         <span className="tag-rs">
-                          Pendiente de confirmacion
+                          Pendiente de confirmación
                         </span>{" "}
-                        <span className="tag-rs">Fecha proxima</span>
+                        <span className="tag-rs">Fecha próxima</span>
                       </p>
                       <h5>
-                        {" "}
-                        <span>Solicitud</span> <br />
-                        {reserva.descripcion}
+                        <span>Motivo</span> <br />
+                        {reserva.Motivo}
                       </h5>
                       <div className="cnt-btn-reservas">
                         <button
                           className="btn-aprobar-reservas"
-                          onClick={() => aprobarReserva(reserva.id)}
+                          onClick={() =>
+                            estadoReserva(reserva.ID_Reserva, "Aprobada")
+                          }
                         >
                           Aprobar
                         </button>
                         <button
                           className="btn-eliminar-reservas"
-                          onClick={() => rechazarReserva(reserva.id)}
+                          onClick={() =>
+                            estadoReserva(reserva.ID_Reserva, "Rechazada")
+                          }
                         >
                           Rechazar
                         </button>

@@ -1,7 +1,7 @@
 .cards-reservas {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   overflow-x: auto;
   width: 94vw;
   padding: 10px 0;
@@ -19,7 +19,7 @@
   background-color: var(--white-color);
   overflow: hidden;
   width: 250px;
-  margin-right: 10px;
+  margin-left: 40px;
   box-shadow: var(--box-shadow);
 }
 
@@ -141,9 +141,3 @@
   justify-content: center;
   text-align: center;
 }
-
-/* @media screen and (max-width: 780px) {
-  .scroll-buttons {
-    display: none;
-  }
-} */

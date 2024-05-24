@@ -38,3 +38,44 @@ export async function peticionForm(url, method, body = null) {
     throw error;
   }
 }
+
+export async function descargarReportes(uri, method, body = null) {
+  try {
+    const { secretParse } = await fetchTokenInfo();
+
+    const headers = {
+      Authorization: `Bearer ${secretParse.secret}`,
+      "Content-Type": "application/json",
+    };
+
+    const requestOptions = {
+      method: method,
+      headers: headers,
+    };
+
+    if (body !== null) {
+      requestOptions.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(
+      `https://www.sire.software/admin/reporte/${uri}`,
+      requestOptions
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al generar el reporte");
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = "";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}

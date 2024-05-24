@@ -69,3 +69,8 @@ export async function getTokenRedirect(request) {
     redirectUri: "/redirect",
   });
 }
+
+export function isAuth() {
+  const accounts = myMSALObj.getAllAccounts();
+  return accounts && accounts.length > 0;
+}

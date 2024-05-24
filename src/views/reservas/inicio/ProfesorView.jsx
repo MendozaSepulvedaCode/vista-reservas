@@ -5,6 +5,7 @@ import "../../../styles/reservas/Principal/profesor.css";
 import CardPropia from "./CardPropia";
 import Historial from "./Historial";
 import { message } from "antd";
+import Vacio from './Vacio'
 
 const ReservaCard = ({ reserva, aprobarReserva, rechazarReserva }) => {
   return (
@@ -34,15 +35,6 @@ const ReservaCard = ({ reserva, aprobarReserva, rechazarReserva }) => {
   );
 };
 
-const Vacio = () => {
-  return (
-    <div className="cnt-vacio">
-      <BiSolidInbox />
-      <h5>No hay elementos</h5>
-    </div>
-  );
-};
-
 function ProfesorView() {
   const [aprobarReservas, setAprobarReservas] = useState([]);
   const [misReservas, setMisReservas] = useState([]);
@@ -66,8 +58,12 @@ function ProfesorView() {
           "GET"
         );
 
+        const reservaActiva = reserva.filter(
+          (reserva) => reserva.Estado === "Pendiente"
+        );
+
         setAprobarReservas(data);
-        setMisReservas(reserva);
+        setMisReservas(reservaActiva);
         setHistorial(historial);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
