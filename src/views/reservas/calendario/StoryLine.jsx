@@ -1,56 +1,26 @@
-import { useState } from "react";
 import "../../../styles/reservas/calendario/storyline.css";
 import TimeLine from "./TimeLine";
 
-function Storyline() {
-  const [showAllAvatars, setShowAllAvatars] = useState(false);
-  const inicialesUser = [
-    {
-      name: "Jose Mendoza",
-    },
-    {
-      name: "Lucas Pedrozo",
-    },
-    {
-      name: "Julian Camacho",
-    },
-    {
-      name: "Michael Casadiegos",
-    },
-    {
-      name: "Dilia Rosa",
-    },
-    {
-      name: "Luis A",
-    },
-  ];
+function Storyline({ reservas, aux }) {
+  const maxAvatars = 3;
 
-  const perfilAvatar = (users) => {
-    const maxAvatars = 4;
-    const usuariosAux = users.length - maxAvatars;
-
-    const sortAux = [...users].sort((a, b) => a.name.localeCompare(b.name));
+  const perfilAvatar = (aux) => {
+    const sortAux = [...aux].sort((a, b) => a.Nombre.localeCompare(b.Nombre));
+    const displayedAux = sortAux.slice(0, maxAvatars);
 
     return (
       <div className="avatar-container">
-        {sortAux.map((user, index) => (
+        {displayedAux.map((user, index) => (
           <div
-            className={`avatar-profile ${
-              !showAllAvatars && index >= maxAvatars ? "hidden-avatar" : ""
-            }`}
+            className="avatar-profile"
             key={index}
             style={{ backgroundColor: colorAleatorio() }}
           >
-            {obtenerIniciales(user.name)}
+            {obtenerIniciales(user.Nombre)}
           </div>
         ))}
-        {usuariosAux > 0 && (
-          <div
-            className="avatar-profile-more"
-            onClick={() => setShowAllAvatars(!showAllAvatars)}
-          >
-            +{usuariosAux}
-          </div>
+        {aux.length > maxAvatars && (
+          <div className="avatar-profile-more">+{aux.length - maxAvatars}</div>
         )}
       </div>
     );
@@ -78,9 +48,9 @@ function Storyline() {
     <div className="story-line">
       <div className="head-story">
         <h5>Calendario </h5>
-        {perfilAvatar(inicialesUser)}
+        {perfilAvatar(aux)}
       </div>
-      <TimeLine />
+      <TimeLine reservas={reservas} />
     </div>
   );
 }

@@ -39,7 +39,7 @@ export async function peticionForm(url, method, body = null) {
   }
 }
 
-export async function descargarReportes(uri, method, body = null) {
+export async function descargarReportes(uri, method, body = null, nombreReporte) {
   try {
     const { secretParse } = await fetchTokenInfo();
 
@@ -66,15 +66,20 @@ export async function descargarReportes(uri, method, body = null) {
       throw new Error("Error al generar el reporte");
     }
 
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = "";
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    } else {
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = nombreReporte;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
   } catch (error) {
     console.error("Error:", error);
   }

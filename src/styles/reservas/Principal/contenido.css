@@ -110,7 +110,6 @@ tr:hover {
 .cnt-btn-reservas {
   display: flex;
   flex-direction: row;
-  transform: translateX(50px);
 }
 
 .btn-aprobar-reservas {

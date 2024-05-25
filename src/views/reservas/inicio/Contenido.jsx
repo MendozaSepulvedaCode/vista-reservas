@@ -15,6 +15,7 @@ function Contenido() {
           "https://www.sire.software/admin/get_reservas",
           "GET"
         );
+
         setAllResState(allRes);
       } catch (error) {
         console.error("Error al obtener los datos:", error);

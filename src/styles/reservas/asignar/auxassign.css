@@ -219,3 +219,18 @@
   background: var(--gray-color);
   border: none;
 }
+
+@media screen and (max-width: 780px) {
+  .head-established {
+    flex-direction: column;
+  }
+
+  .h4-head {
+    margin-bottom: 12px;
+    margin-top: 18px;
+  }
+
+  .btn-assign-aux {
+    width: 100%;
+  }
+}

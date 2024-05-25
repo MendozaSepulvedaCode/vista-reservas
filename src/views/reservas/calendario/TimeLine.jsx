@@ -1,68 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "../../../styles/reservas/calendario/timeline.css";
-import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import dayjs, { locale } from "dayjs";
-import { CiCalendar } from "react-icons/ci";
-import { LuCalendarCheck } from "react-icons/lu";
-import { FaChevronLeft, FaChevronRight, FaCalendarAlt } from "react-icons/fa";
-import "dayjs/locale/es";
+import moment from "moment";
+import "moment/locale/es";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-dayjs(locale("es"));
+dayjs.locale("es");
 
-const TimeLine = () => {
-  const localizer = dayjsLocalizer(dayjs);
-  // const reservas = [];
-  // for (let i = 0; i < 8; i++) {
-  //   const reserva = {
-  //     start: dayjs("2024-02-19T21:00:00").toDate(),
-  //     end: dayjs("2024-02-19T23:59:00").toDate(),
-  //     title: `A2-502-${i + 1}`,
-  //     nameUser: `Usuario${i + 1}`,
-  //   };
-
-  //   reservas.push(reserva);
-  // }
-
-  const reservas = [
-    {
-      start: dayjs("2024-03-01T20:00:00").toDate(),
-      end: dayjs("2024-03-01T22:00:00").toDate(),
-      title: "A2-502",
-      nameUser: "Jose Mendoza",
-    },
-
-    {
-      start: dayjs("2024-03-06T8:00:00").toDate(),
-      end: dayjs("2024-03-06T10:00:00").toDate(),
-      title: "A1-401",
-      nameUser: "Jose Mendoza",
-    },
-    {
-      start: dayjs("2024-03-07T7:00:00").toDate(),
-      end: dayjs("2024-03-06T7:00:00").toDate(),
-      title: "A2-502",
-      nameUser: "Jose Mendoza",
-    },
-    {
-      start: dayjs("2024-03-04T10:00:00").toDate(),
-      end: dayjs("2024-03-04T12:00:00").toDate(),
-      title: "A1-401",
-      nameUser: "Jose Mendoza",
-    },
-    {
-      start: dayjs("2024-03-05T10:00:00").toDate(),
-      end: dayjs("2024-03-05T12:00:00").toDate(),
-      title: "A4-303",
-      nameUser: "Jose Mendoza",
-    },
-    {
-      start: dayjs("2024-02-16T10:00:00").toDate(),
-      end: dayjs("2024-02-16T12:00:00").toDate(),
-      title: "A1-202",
-      nameUser: "Jose Mendoza",
-    },
-  ];
+const TimeLine = ({ reservas }) => {
+  const localizer = momentLocalizer(moment);
 
   let formats = {
     timeGutterFormat: "HH:mm",
@@ -86,17 +34,8 @@ const TimeLine = () => {
                 alignItems: "center",
               }}
             >
-              {event.title}
-              <LuCalendarCheck
-                style={{ marginLeft: "10px", fontSize: "20px" }}
-              />
-            </div>{" "}
-            <div
-              className="avatar-event"
-              style={{
-                backgroundImage: `url(${"https://i.redd.it/ypire7te8rc71.jpg"})`,
-              }}
-            ></div>
+              {event?.event.Nombre} <br /> {event?.event.Espacio}
+            </div>
           </div>
         );
       } else {
@@ -108,17 +47,8 @@ const TimeLine = () => {
                 alignItems: "center",
               }}
             >
-              {event.title}
-              <LuCalendarCheck
-                style={{ marginLeft: "10px", fontSize: "20px" }}
-              />
-            </div>{" "}
-            <div
-              className="avatar-event"
-              style={{
-                backgroundImage: `url(${"https://i.redd.it/ypire7te8rc71.jpg"})`,
-              }}
-            ></div>
+              {event?.event.Nombre} <br /> {event?.event.Espacio}
+            </div>
           </div>
         );
       }
@@ -194,13 +124,18 @@ const TimeLine = () => {
     <div className="day-calendar">
       <Calendar
         localizer={localizer}
-        events={reservas}
+        events={reservas?.Reservas_Aca?.map((reserva) => ({
+          ...reserva,
+          start: new Date(reserva.Fecha_Inicio),
+          end: new Date(reserva.Fecha_Fin),
+        }))}
         views={["month", "week", "day"]}
         defaultView="month"
         showAllEvents={true}
         formats={formats}
-        min={dayjs("2024-02-19T7:00:00").toDate()}
+        min={dayjs("2024-02-19T07:00:00").toDate()}
         max={dayjs("2024-02-19T23:59:00").toDate()}
+
         components={{
           event: components.event,
           toolbar: CustomToolbar,

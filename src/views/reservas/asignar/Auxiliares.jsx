@@ -117,8 +117,8 @@ function Auxiliares() {
         <button className="btn-crear-aux" onClick={showModal}>
           Crear Auxiliar
         </button>
-        {listAux.map((aux) => {
-          return (
+        {listAux.length > 0 ? (
+          listAux.map((aux) => (
             <div
               key={aux.ID_User}
               className={`aux-card ${
@@ -133,8 +133,10 @@ function Auxiliares() {
                 <p className="aux-name">{aux.Nombre}</p>
               </div>
             </div>
-          );
-        })}
+          ))
+        ) : (
+          <Vacio />
+        )}
       </div>
       <div className="aux-picker">
         {selectedAux ? (

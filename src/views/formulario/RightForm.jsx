@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/formulario/rightform.css";
 import LogoUtb from "../../assets/logo_utb.png";
-import { Steps, message } from "antd";
+import { Steps, message, TimePicker } from "antd";
 import { fetchTokenInfo } from "../../utils/fetchTokenInfo";
 import Input from "./InputForm";
 import Select from "./SelectInput";
@@ -35,6 +35,23 @@ function RightForm({ materias }) {
     const [tipoRes, setTipoRes] = useState("");
     const [selectedProfesor, setSelectedProfesor] = useState("");
 
+    const role = localStorage.getItem("role");
+    const esEstudiante = role === "Estudiante";
+
+    useEffect(() => {
+      const savedData = localStorage.getItem("primer_paso");
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        setCodigo(parsedData.Codigo || "");
+        setMotivo(parsedData.Motivo || "");
+
+        if (parsedData.Tipo_Res === "1") {
+          setProfesorDisabled(false);
+          manejoCambioMateria(parsedData.Materia);
+        }
+      }
+    }, []);
+
     const manejoCambioMateria = async (value) => {
       try {
         const encodedValue = encodeURIComponent(value);
@@ -42,7 +59,7 @@ function RightForm({ materias }) {
         setSelectedMateria(value);
         setProfesorDisabled(false);
 
-        const url = `https://sire-utb-x2ifq.ondigitalocean.app/form/profesor/${encodedValue}`;
+        const url = `https://www.sire.software/form/profesor/${encodedValue}`;
 
         const response = await peticionForm(url, "GET");
 
@@ -51,7 +68,7 @@ function RightForm({ materias }) {
 
           setProfesores(nombresProfesores);
         } else {
-          console.log(
+          message.error(
             "La respuesta de la API de profesores está vacía o no es un array."
           );
         }
@@ -116,13 +133,35 @@ function RightForm({ materias }) {
       {
         id: "academica",
         type: "select",
-        options: [
-          { value: "", label: "¿La solicitud es académica?", disabled: true },
-          { value: 1, label: "Si" },
-          { value: 0, label: "No" },
-        ],
-        defaultValue: "",
-        onChange: (e) => setTipoRes(e.target.value),
+        options: esEstudiante
+          ? [
+              {
+                value: "",
+                label: "La solicitud es académica?",
+                disabled: true,
+              },
+              { value: "1", label: "Si" },
+            ]
+          : [
+              {
+                value: "",
+                label: "La solicitud es académica?",
+                disabled: true,
+              },
+              { value: "1", label: "Si" },
+              { value: "0", label: "No" },
+            ],
+        defaultValue: tipoRes,
+        onChange: (e) => {
+          setTipoRes(e.target.value);
+          if (e.target.value === "1") {
+            setProfesorDisabled(true);
+          } else {
+            setSelectedMateria("");
+            setSelectedProfesor("");
+            setProfesorDisabled(true);
+          }
+        },
       },
       {
         id: "materia",
@@ -136,8 +175,9 @@ function RightForm({ materias }) {
               }))
             : []),
         ],
-        defaultValue: "",
+        defaultValue: selectedMateria,
         onChange: (e) => manejoCambioMateria(e.target.value),
+        disabled: tipoRes !== "1",
       },
       {
         id: "profesor",
@@ -146,7 +186,7 @@ function RightForm({ materias }) {
           { value: "", label: "Profesor", disabled: true },
           ...profesores.map((nombre) => ({ value: nombre, label: nombre })),
         ],
-        defaultValue: "",
+        defaultValue: selectedProfesor,
         onChange: handleProfesorChange,
         disabled: profesorDisabled,
       },
@@ -155,6 +195,7 @@ function RightForm({ materias }) {
         type: "input",
         inputType: "text",
         placeholder: "Motivo",
+        value: motivo,
         onChange: (e) => setMotivo(e.target.value),
         readOnly: false,
       },
@@ -164,9 +205,8 @@ function RightForm({ materias }) {
       if (
         !codigo.startsWith("T000") ||
         !tipoRes ||
-        !selectedMateria ||
-        !selectedProfesor ||
-        !motivo
+        !motivo ||
+        (tipoRes === "1" && (!selectedMateria || !selectedProfesor))
       ) {
         message.error("Por favor, complete todos los campos.", 8);
         return;
@@ -177,14 +217,17 @@ function RightForm({ materias }) {
         Codigo: codigo,
         Correo: userData?.response?.username || "",
         Tipo_Res: tipoRes,
-        Materia: selectedMateria,
-        Nombre_Prof: selectedProfesor,
         Motivo: motivo,
       };
 
+      if (tipoRes === "1") {
+        data.Materia = selectedMateria;
+        data.Nombre_Prof = selectedProfesor;
+      }
+
       localStorage.setItem("primer_paso", JSON.stringify(data));
 
-      setCurrentStep(currentStep + 1);
+      setCurrentStep((prevStep) => prevStep + 1);
     };
 
     return (
@@ -212,6 +255,7 @@ function RightForm({ materias }) {
                   options={campo.options}
                   defaultValue={campo.defaultValue}
                   onChange={campo.onChange}
+                  disabled={campo.disabled}
                 />
               );
             } else {
@@ -240,6 +284,7 @@ function RightForm({ materias }) {
     const [selectedHoraInicio, setSelectedHoraInicio] = useState("");
     const [selectedHoraFin, setSelectedHoraFin] = useState("");
     const [aulas, setAulas] = useState([]);
+    const [capacidadAulas, setCapacidadAulas] = useState([]);
     const [aulasDisabled, setAulasDisabled] = useState(true);
     const [bloquesDisabled, setBloquesDisabled] = useState("");
     const [capacidad, setCapacidad] = useState("");
@@ -253,7 +298,7 @@ function RightForm({ materias }) {
         setBloquesDisabled(false);
         setAulasDisabled(false);
 
-        const url = `https://sire-utb-x2ifq.ondigitalocean.app/form/bloque/${value}`;
+        const url = `https://www.sire.software/form/bloque/${value}`;
 
         const response = await peticionForm(url, "GET");
 
@@ -261,7 +306,7 @@ function RightForm({ materias }) {
           const numBloques = response.map((bloque) => bloque.Bloque);
           setBloques(numBloques);
         } else {
-          console.log(
+          message.error(
             "La respuesta de la API de bloques está vacía o no es un array."
           );
         }
@@ -288,27 +333,36 @@ function RightForm({ materias }) {
       }
     };
 
-    const handleHoraInicioChange = (e) => {
-      setSelectedHoraInicio(e.target.value);
+    const formatHourRange = (time) => {
+      if (time) {
+        const hour = time.format("HH:mm");
+        return hour;
+      } else {
+        return null;
+      }
+    };
+
+    const handleHoraInicioChange = (value) => {
+      setSelectedHoraInicio(value);
       if (
         selectedCampus &&
         selectedBloque &&
         selectedDia &&
-        e.target.value &&
+        value &&
         selectedHoraFin
       ) {
         setAulasDisabled(false);
       }
     };
 
-    const handleHoraFinChange = (e) => {
-      setSelectedHoraFin(e.target.value);
+    const handleHoraFinChange = (value) => {
+      setSelectedHoraFin(value);
       if (
         selectedCampus &&
         selectedBloque &&
         selectedDia &&
         selectedHoraInicio &&
-        e.target.value
+        value
       ) {
         setAulasDisabled(false);
       }
@@ -326,18 +380,25 @@ function RightForm({ materias }) {
           const body = {
             Campus: selectedCampus,
             Bloque: selectedBloque,
-            Hora_ini: selectedHoraInicio,
-            Hora_fin: selectedHoraFin,
+            Hora_ini: formatHourRange(selectedHoraInicio),
+            Hora_fin: formatHourRange(selectedHoraFin),
             Fecha: selectedDia,
           };
 
           const response = await peticionForm(
-            "https://sire-utb-x2ifq.ondigitalocean.app/form/validate",
+            "https://www.sire.software/form/validate",
             "POST",
             body
           );
 
-          console.log(response);
+          if (response && response.aulas && response.aulas.Disponibles) {
+            const capacidadAulas = response.aulas.Disponibles.map(
+              (aula) => aula.Capacidad
+            );
+            setCapacidadAulas(capacidadAulas);
+          } else {
+            message.error("No hay  aulas disponibles.");
+          }
 
           if (response && response.aulas && response.aulas.Disponibles) {
             const aulasDisponibles = response.aulas.Disponibles.map(
@@ -345,13 +406,11 @@ function RightForm({ materias }) {
             );
             setAulas(aulasDisponibles);
           } else {
-            console.log(
-              "La respuesta de la API no tiene las aulas disponibles esperadas."
-            );
+            message.error("No hay  aulas disponibles.");
           }
         }
       } catch (error) {
-        console.error("Error al realizar la validación de aulas:", error);
+        message.error(error.message);
       }
     };
 
@@ -411,21 +470,17 @@ function RightForm({ materias }) {
       },
       {
         id: "horaInicio",
-        type: "input",
-        inputType: "time",
+        type: "timepicker",
         placeholder: "Hora Inicio",
-        defaultValue: "",
-        readOnly: false,
+        value: selectedHoraInicio,
         onChange: handleHoraInicioChange,
         disabled: !selectedCampus,
       },
       {
         id: "HoraFin",
-        type: "input",
-        inputType: "time",
+        type: "timepicker",
         placeholder: "Hora Fin",
-        defaultValue: "",
-        readOnly: false,
+        value: selectedHoraFin,
         onChange: handleHoraFinChange,
         disabled: !selectedCampus,
       },
@@ -435,7 +490,10 @@ function RightForm({ materias }) {
         placeholder: "Aula",
         options: [
           { value: "", label: "Salon", disabled: true },
-          ...aulas.map((aula) => ({ value: aula, label: aula })),
+          ...aulas.map((aula, index) => ({
+            value: aula,
+            label: `${aula} Capacidad: ${capacidadAulas[index]}`,
+          })),
         ],
         defaultValue: "",
         onChange: handleSalonChange,
@@ -445,7 +503,7 @@ function RightForm({ materias }) {
         id: "capacidad",
         type: "input",
         inputType: "text",
-        placeholder: "Capacidad",
+        placeholder: "Total de asistentes",
         onChange: (e) => setCapacidad(e.target.value),
         readOnly: false,
         disabled: !selectedCampus,
@@ -481,8 +539,8 @@ function RightForm({ materias }) {
         Motivo: data_first_stage.Motivo,
         Campus: selectedCampus,
         Bloque: selectedBloque,
-        Hora_ini: selectedHoraInicio,
-        Hora_fin: selectedHoraFin,
+        Hora_ini: formatHourRange(selectedHoraInicio),
+        Hora_fin: formatHourRange(selectedHoraFin),
         Fecha: selectedDia,
         Salon: selectedSalon,
         Capacidad: capacidad,
@@ -510,7 +568,6 @@ function RightForm({ materias }) {
         }
       }
     };
-
     return (
       <>
         <form className="formulario-reserva">
@@ -539,6 +596,19 @@ function RightForm({ materias }) {
                   defaultValue={campo.defaultValue}
                   onChange={campo.onChange}
                   disabled={campo.disabled}
+                />
+              );
+            } else if (campo.type === "timepicker") {
+              return (
+                <TimePicker
+                  key={index}
+                  id={campo.id}
+                  placeholder={campo.placeholder}
+                  value={campo.value}
+                  onChange={campo.onChange}
+                  disabled={campo.disabled}
+                  format="HH:00"
+                  showNow={false}
                 />
               );
             } else {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, DatePicker, Button } from "antd";
+import esES from "antd/es/locale/es_ES";
 
 const UsoReserva = ({ visible, onCancel, onGenerateReport }) => {
   const [fechaInicio, setFechaInicio] = useState(null);
@@ -33,10 +34,14 @@ const UsoReserva = ({ visible, onCancel, onGenerateReport }) => {
           onChange={(date) => setFechaInicio(date)}
           placeholder="Fecha de inicio"
           style={{ marginRight: "10px" }}
+          locale={esES}
+          showNow={false}
         />
         <DatePicker
           onChange={(date) => setFechaFin(date)}
           placeholder="Fecha de fin"
+          locale={esES}
+          showNow={false}
         />
       </div>
     </Modal>

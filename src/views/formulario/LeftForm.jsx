@@ -4,12 +4,17 @@ import { IoClose } from "react-icons/io5";
 import { redireccionar } from "../../utils/redireccionarRutas";
 
 function LeftForm() {
+  const deletePrimerPaso = () => {
+    localStorage.removeItem("primer_paso");
+    redireccionar("/dashboard");
+  };
+
   return (
     <div className="lf-form">
       <div className="head-lf-frm">
         <IoClose
           style={{ fontSize: "25px", cursor: "pointer", marginBottom: "20px" }}
-          onClick={() => redireccionar("/dashboard")}
+          onClick={() => deletePrimerPaso()}
         />
         <h5>Sistema de reservas de aula</h5>
         <h3>

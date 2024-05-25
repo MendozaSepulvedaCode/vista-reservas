@@ -101,3 +101,11 @@
   opacity: 0.7;
   transition: all 0.5s;
 }
+
+@media screen and (max-width: 1250px) {
+  .aux-picker-cnt h5 {
+    font-size: 20px;
+    margin-top: 12px;
+    margin-bottom: 0.9rem;
+  }
+}

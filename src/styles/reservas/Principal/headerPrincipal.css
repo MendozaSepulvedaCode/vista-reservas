@@ -103,8 +103,8 @@
 .btn-reports {
   border: none;
   border-radius: 5px;
-  padding: 10px 15px;
-  font-size: 15px;
+  padding: 8px 12px;
+  font-size: 14px;
   background-color: var(--green-color);
   color: var(--white-color);
   transition: all 0.5s;

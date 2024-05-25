@@ -27,7 +27,7 @@
 
 .top-body-cnt {
   width: 100%;
-  height: 50.3%;
+  height: 20%;
   border-bottom: 2px solid var(--gray-color);
   display: flex;
   flex-direction: column;
@@ -45,9 +45,10 @@
 .top-body-cnt div select,
 .top-body-cnt div input {
   margin-bottom: 7px;
-  width: 42%;
+  width: 55%;
   height: 5vh;
   padding: 7px;
+  outline: none;
   border: none;
   border-radius: 4px;
   box-sizing: border-box;
@@ -56,9 +57,15 @@
   background-color: var(--gray-color);
 }
 
-.bnt-bloquear {
+.top-body-cnt div select,
+.top-body-cnt div input {
+  border: none;
+}
+
+.btn-bloquear {
   padding: 7px 25px;
   border-radius: 5px;
+  border: none;
   color: var(--white-color);
   background-color: var(--red-color);
   cursor: pointer;
@@ -66,14 +73,14 @@
   font-weight: bold;
 }
 
-.bnt-bloquear:hover {
+.btn-bloquear:hover {
   opacity: 0.7;
   transition: all 0.5s;
 }
 
 .bottom-body-cnt {
   width: 100%;
-  height: 49.7%;
+  height: 72%;
   padding: 20px;
 }
 
@@ -85,9 +92,19 @@
 
 .cnt-salones-restringidos {
   width: 90%;
-  height: 81%;
+  height: 100%;
   margin-top: 15px;
   overflow: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.cnt-salones-restringidos::-webkit-scrollbar {
+  width: 7px;
+}
+
+.cnt-salones-restringidos::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
 }
 
 .card-salones-restringidos {
@@ -96,10 +113,11 @@
   background-color: var(--red-color);
   justify-content: space-around;
   text-align: center;
-  width: 40%;
-  height: 35%;
+  width: 80%;
+  height: 80px;
   padding: 10px;
   border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 .card-salones-restringidos h6 {
@@ -112,4 +130,10 @@
   margin: 0;
   color: var(--white-color);
   font-size: 12px;
+}
+
+@media screen and (max-width: 1100px) {
+  .body-left {
+    display: none;
+  }
 }

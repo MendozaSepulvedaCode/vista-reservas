@@ -61,6 +61,25 @@ const TablaReservas = ({ allResState }) => {
       }
     };
 
+    const cambiarEstadoReserva = async (reservaId, estado) => {
+      try {
+        const body = { Estado: estado };
+        const response = await peticionForm(
+          `https://www.sire.software/admin/cambiar_estado/${reservaId}`,
+          "PATCH",
+          body
+        );
+        message.success(`La reserva ha sido ${estado} exitosamente`);
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
+        return response;
+      } catch (error) {
+        console.error("Error al aprobar la reserva:", error);
+        message.error("Error al aprobar la reserva");
+      }
+    };
+
     return (
       <table className="tbl-reservas">
         <thead>
@@ -139,7 +158,7 @@ const TablaReservas = ({ allResState }) => {
                         <button
                           className="btn-aprobar-reservas"
                           onClick={() =>
-                            estadoReserva(reserva.ID_Reserva, "Aprobada")
+                            cambiarEstadoReserva(reserva.ID_Reserva, "Aprobada")
                           }
                         >
                           Aprobar
@@ -147,7 +166,10 @@ const TablaReservas = ({ allResState }) => {
                         <button
                           className="btn-eliminar-reservas"
                           onClick={() =>
-                            estadoReserva(reserva.ID_Reserva, "Rechazada")
+                            cambiarEstadoReserva(
+                              reserva.ID_Reserva,
+                              "Rechazada"
+                            )
                           }
                         >
                           Rechazar

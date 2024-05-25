@@ -6,7 +6,7 @@ import { BiCalendarCheck, BiBuildings } from "react-icons/bi";
 import { LuUsers } from "react-icons/lu";
 import { message, Popover, Input } from "antd";
 import CardPropia from "./CardPropia";
-import Vacio from './Vacio'
+import Vacio from "./Vacio";
 
 const { TextArea } = Input;
 
@@ -19,25 +19,33 @@ function Historial({ reserva }) {
     };
 
     const mainContainer = document.querySelector(".historial-reservas");
-    mainContainer.addEventListener("scroll", handleScrollOutside);
+    if (mainContainer) {
+      mainContainer.addEventListener("scroll", handleScrollOutside);
+    }
 
     return () => {
-      mainContainer.removeEventListener("scroll", handleScrollOutside);
+      if (mainContainer) {
+        mainContainer.removeEventListener("scroll", handleScrollOutside);
+      }
     };
   }, []);
+
+  if (!reserva) {
+    message.error("No hay asignaciones");
+  }
 
   return (
     <div className="card-propia-historial">
       <div className="head-propia">
-        <h6>{reserva.Horas}</h6>
+        <h6>{reserva?.Horas}</h6>
       </div>
       <div className="content-propia-historial">
         <div className="icon-text-historial">
           <div>
-            <BiBuildings /> {reserva.ID_Espacio}
+            <BiBuildings /> {reserva?.ID_Espacio}
           </div>
           <div>
-            <LuUsers /> {reserva.Nombre}
+            <LuUsers /> {reserva?.Nombre}
           </div>
         </div>
         <div className="cnt-btn-cancelar">
@@ -63,6 +71,11 @@ const PopoverContent = ({ reserva }) => {
   const [enviarReporte, setEnviarReporte] = useState(false);
 
   const handleEnviarReporte = async () => {
+    if (!reserva) {
+      message.error("No hay reserva disponible para enviar reporte");
+      return;
+    }
+
     try {
       let body;
       const idKey = reserva.ID_Reserva ? "ID_Reserva" : "ID_Horario";
@@ -81,11 +94,11 @@ const PopoverContent = ({ reserva }) => {
       }
 
       const response = await peticionForm(
-        "https://api-aux-qazj7.ondigitalocean.app/aux/reporte",
+        "https://www.sire.software/aux/reporte",
         "POST",
         body
       );
-      message.success("El reporte se ha enviado exitosamenteeeeee");
+      message.success("El reporte se ha enviado exitosamente");
       setTimeout(() => {
         window.location.reload();
       }, 800);
@@ -150,12 +163,16 @@ function AuxiliarView() {
     const fetchData = async () => {
       try {
         const reserva = await peticionForm(
-          "https://api-aux-qazj7.ondigitalocean.app/aux/espaciosaux",
+          "https://www.sire.software/aux/espaciosaux",
           "GET"
         );
 
-        setReservas(reserva.Reservas);
-        setInfoReservas(reserva.Clases_regulares);
+        if (reserva && reserva.Reservas) {
+          setReservas(reserva.Reservas);
+        }
+        if (reserva && reserva.Clases_regulares) {
+          setInfoReservas(reserva.Clases_regulares);
+        }
       } catch (error) {
         console.error("Error al obtener los datos:", error);
       }

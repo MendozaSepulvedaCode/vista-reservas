@@ -10,6 +10,7 @@ import { redireccionar } from "../../utils/redireccionarRutas";
 import { signOut } from "../../auth/authRedirect";
 import { descargarReportes } from "../../utils/peticiones";
 import UsoReserva from "./reportes/UsoReserva";
+import UsoEstados from "./reportes/UsoEstados";
 
 const { confirm } = Modal;
 
@@ -19,6 +20,7 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [modalIsVisible2, setModalIsVisible2] = useState(false);
+  const [modalEstado, setModalEstado] = useState(false);
   const userInitials = userData ? obtenerIniciales(userData.response.name) : "";
 
   const showDrawer = () => {
@@ -63,10 +65,19 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
     setModalIsVisible2(false);
   };
 
+  const estadoSet = () => {
+    setModalEstado(true);
+  };
+
+  const cancelEstado = () => {
+    setModalEstado(false);
+  };
+
   const handleModalButtonClick = (action) => {
     setModalVisible(false);
     setModalIsVisible(false);
     setModalIsVisible2(false);
+    setModalEstado(false);
   };
 
   useEffect(() => {
@@ -84,9 +95,9 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
   }, []);
 
   // Peticiones
-  const usoClases = (uri) => async () => {
+  const usoClases = (uri, nombreDoc) => async () => {
     try {
-      await descargarReportes(uri, "GET");
+      await descargarReportes(uri, "GET", nombreDoc);
       message.success("Reporte creado exitosamente");
     } catch (error) {
       console.error("Error al crear el reporte:", error);
@@ -94,21 +105,45 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
     }
   };
 
-  const useReport = (uri) => async (fechaInicio, fechaFin) => {
+  const useReport = (uri, nombreDoc) => async (fechaInicio, fechaFin) => {
     const body = {
       Fecha_Inicio: fechaInicio,
       Fecha_Fin: fechaFin,
     };
 
     try {
-      const response = await descargarReportes(uri, "POST", body);
-      message.success("Reporte creado exitosamente");
-      return response;
+      const response = await descargarReportes(uri, "POST", body, nombreDoc);
+      if (response) {
+        message.success(response.message);
+      } else {
+        message.success("Descarga de archivo exitosa");
+      }
     } catch (error) {
       console.error("Error al crear el reporte:", error);
       message.error("Error al crear el reporte");
     }
   };
+
+  const useEstado =
+    (uri, nombreDoc) => async (fechaInicio, fechaFin, estados) => {
+      const body = {
+        Fecha_Inicio: fechaInicio,
+        Fecha_Fin: fechaFin,
+        Estados: estados,
+      };
+
+      try {
+        const response = await descargarReportes(uri, "POST", body, nombreDoc);
+        if (response) {
+          message.success(response.message);
+        } else {
+          message.success("Descarga de archivo exitosa");
+        }
+      } catch (error) {
+        console.error("Error al crear el reporte:", error);
+        message.error("Error al crear el reporte");
+      }
+    };
 
   const items = [
     {
@@ -196,7 +231,9 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
       >
         <div className="modal-buttons">
           <button
-            onClick={() => usoClases("uso_espacio_clase")()}
+            onClick={() =>
+              usoClases("uso_espacio_clase", "reporte_uso_clases")()
+            }
             className="btn-modal-report"
           >
             Reporte para uso de espacios en clase
@@ -208,7 +245,10 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
             visible={modalIsVisible}
             onCancel={reportCancel}
             onGenerateReport={(fechaInicio, fechaFin) =>
-              useReport("uso_espacio_reserva")(fechaInicio, fechaFin)
+              useReport("uso_espacio_reserva", "reporte_uso_espacios_reserva")(
+                fechaInicio,
+                fechaFin
+              )
             }
           />
 
@@ -219,22 +259,35 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
             visible={modalIsVisible2}
             onCancel={reportCancel2}
             onGenerateReport={(fechaInicio, fechaFin) =>
-              useReport("num_reserva")(fechaInicio, fechaFin)
+              useReport("num_reserva", "reporte_numero_reservas")(
+                fechaInicio,
+                fechaFin
+              )
             }
           />
 
           <button
-            onClick={() => usoClases("horas_trabajadas")()}
+            onClick={() =>
+              usoClases("horas_trabajadas", "reporte_horas_trabajadas")()
+            }
             className="btn-modal-report"
           >
             Reporte de horas asignadas a auxiliares
           </button>
-          <button
-            onClick={() => handleModalButtonClick("button5")}
-            className="btn-modal-report"
-          >
+          <button onClick={estadoSet} className="btn-modal-report">
             Reporte de dashboard
           </button>
+          <UsoEstados
+            visible={modalEstado}
+            onCancel={cancelEstado}
+            onGenerateReport={(fechaInicio, fechaFin, estados) =>
+              useEstado("dash", "reporte_dashboard")(
+                fechaInicio,
+                fechaFin,
+                estados
+              )
+            }
+          />
         </div>
       </Modal>
     </div>

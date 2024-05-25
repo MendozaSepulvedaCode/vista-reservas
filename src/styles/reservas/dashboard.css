@@ -16,6 +16,7 @@
 @media screen and (max-width: 780px) {
   .cnt-panel {
     width: 80vw;
+    height: auto;
   }
 
   .cnt-dashboard {

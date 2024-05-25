@@ -29,12 +29,13 @@
   display: flex;
   position: relative;
   justify-content: end;
-  width: 50%;
+  width: 30%;
+  margin-right: q0px;
 }
 
 .avatar-profile {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border: 2px solid var(--gray-color);
   color: #fff;
   display: flex;
@@ -50,8 +51,8 @@
 }
 
 .avatar-profile-more {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   background-color: var(--gray-color);
   border: 2px solid var(--gray-color);
   color: #333;
@@ -62,7 +63,7 @@
   font-weight: bold;
   position: relative;
   margin-right: 20px;
-  margin-left: -65px;
+  margin-left: -15px;
   cursor: pointer;
   box-shadow: var(--box-shadow);
 }
@@ -74,4 +75,13 @@
 
 .rbc-day-bg .rbc-today {
   overflow-y: auto !important;
+}
+
+@media screen and (max-width: 1100px) {
+  .story-line {
+    overflow-x: auto;
+  }
+  .head-story {
+    width: 150vw;
+  }
 }

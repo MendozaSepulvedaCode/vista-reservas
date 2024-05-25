@@ -253,7 +253,7 @@ function AuxAssign({ auxInfo }) {
               className="btn-delete-all"
               onClick={() => peticionDeleteAsignaciones(auxInfo.ID_User)}
             >
-              Eliminar todas las reservas
+              Eliminar todas las asignaciones
             </button>
           </div>
           <div className="blocks">
