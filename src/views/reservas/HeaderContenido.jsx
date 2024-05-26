@@ -175,7 +175,7 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
   ];
 
   const filteredItems = items.filter((item) => {
-    if (role === "Profesor" || role === "Estudiante" || role === "Auxiliar") {
+    if (role === "Profesor" || role === "Estudiante" || role === "Aux_Administrativo") {
       return item.key === "Salir" || item.key === "Formulario";
     }
     return true;
