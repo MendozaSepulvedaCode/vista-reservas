@@ -184,9 +184,11 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
   return (
     <div className="head-cnt-page">
       <div className="search-head">
-        <button className="btn-reports" onClick={handleReportButtonClick}>
-          Generar reportes
-        </button>
+        {role === "Administrador" && (
+          <button className="btn-reports" onClick={handleReportButtonClick}>
+            Generar reportes
+          </button>
+        )}
       </div>
       <div>
         <img src={logo_utb} alt="utb" className="logo-utb" />
