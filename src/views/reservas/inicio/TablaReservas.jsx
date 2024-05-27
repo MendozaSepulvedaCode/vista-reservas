@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { message } from "antd";
 import "../../../styles/reservas/Principal/contenido.css";
 import { peticionForm } from "../../../utils/peticiones";
+import Vacio from "./Vacio";
 
 const TablaReservas = ({ allResState }) => {
   const reservasAca = allResState.Reservas_Aca || [];
@@ -96,91 +97,102 @@ const TablaReservas = ({ allResState }) => {
           </tr>
         </thead>
         <tbody>
-          {reservas.map((reserva, index) => (
-            <React.Fragment key={index}>
-              <tr
-                onClick={() => manejoAcordion(reserva.ID_Reserva)}
-                className={
-                  expandedRow === reserva.ID_Reserva ? "active-row" : ""
-                }
-              >
-                <td>{index + 1}</td>
-                <td>{reserva.Espacio}</td>
-                <td>{reserva.Nombre}</td>
-                <td>{reserva.Aforo}</td>
-                <td>
-                  {reserva.Fecha_Inicio
-                    ? reserva.Fecha_Inicio.split(" ")[0]
-                    : ""}
-                </td>
-                <td>
-                  {reserva.Fecha_Inicio
-                    ? reserva.Fecha_Inicio.split(" ")[1]
-                    : ""}
-                </td>
-                <td>
-                  {reserva.Fecha_Fin ? reserva.Fecha_Fin.split(" ")[1] : ""}
-                </td>
-                <td>
-                  {reserva.Nombre_Docente !== null &&
-                  reserva.Nombre_Docente !== undefined
-                    ? reserva.Nombre_Docente
-                    : "No Aplica"}
-                </td>
-                <td
-                  style={{
-                    fontWeight: "bold",
-                    color: getStatusColor(reserva.Estado),
-                  }}
+          {reservas.length === 0 ? (
+            <tr>
+              <td colSpan="11">
+                <Vacio style={{ width: "100%", height: "100%" }} />
+              </td>
+            </tr>
+          ) : (
+            reservas.map((reserva, index) => (
+              <React.Fragment key={index}>
+                <tr
+                  onClick={() => manejoAcordion(reserva.ID_Reserva)}
+                  className={
+                    expandedRow === reserva.ID_Reserva ? "active-row" : ""
+                  }
                 >
-                  {expandedRow === reserva.ID_Reserva ? (
-                    <span>{reserva.Estado}</span>
-                  ) : (
-                    reserva.Estado
-                  )}
-                </td>
-              </tr>
-              {expandedRow === reserva.ID_Reserva && (
-                <tr>
-                  <td colSpan="11">
-                    <div className="collapsible-content">
-                      <p>
-                        <span className="tag-rs">
-                          Pendiente de confirmación
-                        </span>{" "}
-                        <span className="tag-rs">Fecha próxima</span>
-                      </p>
-                      <h5>
-                        <span>Motivo</span> <br />
-                        {reserva.Motivo}
-                      </h5>
-                      <div className="cnt-btn-reservas">
-                        <button
-                          className="btn-aprobar-reservas"
-                          onClick={() =>
-                            cambiarEstadoReserva(reserva.ID_Reserva, "Aprobada")
-                          }
-                        >
-                          Aprobar
-                        </button>
-                        <button
-                          className="btn-eliminar-reservas"
-                          onClick={() =>
-                            cambiarEstadoReserva(
-                              reserva.ID_Reserva,
-                              "Rechazada"
-                            )
-                          }
-                        >
-                          Rechazar
-                        </button>
-                      </div>
-                    </div>
+                  <td>{index + 1}</td>
+                  <td>{reserva.Espacio}</td>
+                  <td>{reserva.Nombre}</td>
+                  <td>{reserva.Aforo}</td>
+                  <td>
+                    {reserva.Fecha_Inicio
+                      ? reserva.Fecha_Inicio.split(" ")[0]
+                      : ""}
+                  </td>
+                  <td>
+                    {reserva.Fecha_Inicio
+                      ? reserva.Fecha_Inicio.split(" ")[1]
+                      : ""}
+                  </td>
+                  <td>
+                    {reserva.Fecha_Fin ? reserva.Fecha_Fin.split(" ")[1] : ""}
+                  </td>
+                  <td>
+                    {reserva.Nombre_Docente !== null &&
+                    reserva.Nombre_Docente !== undefined
+                      ? reserva.Nombre_Docente
+                      : "No Aplica"}
+                  </td>
+                  <td
+                    style={{
+                      fontWeight: "bold",
+                      color: getStatusColor(reserva.Estado),
+                    }}
+                  >
+                    {expandedRow === reserva.ID_Reserva ? (
+                      <span>{reserva.Estado}</span>
+                    ) : (
+                      reserva.Estado
+                    )}
                   </td>
                 </tr>
-              )}
-            </React.Fragment>
-          ))}
+                {expandedRow === reserva.ID_Reserva && (
+                  <tr>
+                    <td colSpan="11">
+                      <div className="collapsible-content">
+                        <p>
+                          <span className="tag-rs">
+                            Pendiente de confirmación
+                          </span>{" "}
+                          <span className="tag-rs">Fecha próxima</span>
+                        </p>
+                        <h5>
+                          <span>Motivo</span> <br />
+                          {reserva.Motivo}
+                        </h5>
+                        <div className="cnt-btn-reservas">
+                          <button
+                            className="btn-aprobar-reservas"
+                            onClick={() =>
+                              cambiarEstadoReserva(
+                                reserva.ID_Reserva,
+                                "Aprobada"
+                              )
+                            }
+                          >
+                            Aprobar
+                          </button>
+                          <button
+                            className="btn-eliminar-reservas"
+                            onClick={() =>
+                              cambiarEstadoReserva(
+                                reserva.ID_Reserva,
+                                "Rechazada"
+                              )
+                            }
+                          >
+                            Rechazar
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))
+          )}
         </tbody>
       </table>
     );

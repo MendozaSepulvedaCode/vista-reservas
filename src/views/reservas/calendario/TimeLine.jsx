@@ -124,18 +124,24 @@ const TimeLine = ({ reservas }) => {
     <div className="day-calendar">
       <Calendar
         localizer={localizer}
-        events={reservas?.Reservas_Aca?.map((reserva) => ({
-          ...reserva,
-          start: new Date(reserva.Fecha_Inicio),
-          end: new Date(reserva.Fecha_Fin),
-        }))}
+        events={[
+          ...(reservas?.Reservas_Aca?.map((reserva) => ({
+            ...reserva,
+            start: new Date(reserva.Fecha_Inicio),
+            end: new Date(reserva.Fecha_Fin),
+          })) || []),
+          ...(reservas?.Reservas_NAca?.map((reserva) => ({
+            ...reserva,
+            start: new Date(reserva.Fecha_Inicio),
+            end: new Date(reserva.Fecha_Fin),
+          })) || []),
+        ]}
         views={["month", "week", "day"]}
         defaultView="month"
         showAllEvents={true}
         formats={formats}
         min={dayjs("2024-02-19T07:00:00").toDate()}
         max={dayjs("2024-02-19T23:59:00").toDate()}
-
         components={{
           event: components.event,
           toolbar: CustomToolbar,
