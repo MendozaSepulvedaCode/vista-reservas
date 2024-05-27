@@ -18,7 +18,7 @@ function CntCalendario() {
         );
 
         const reservas = await peticionForm(
-          "https://www.sire.software/admin/get_reservas",
+          "https://www.sire.software/admin/reservas_apro",
           "GET"
         );
 

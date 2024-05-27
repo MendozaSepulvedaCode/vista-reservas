@@ -609,6 +609,8 @@ function RightForm({ materias }) {
                   disabled={campo.disabled}
                   format="HH:00"
                   showNow={false}
+                  needConfirm={false}
+                  pickerPlacement="top"
                 />
               );
             } else {

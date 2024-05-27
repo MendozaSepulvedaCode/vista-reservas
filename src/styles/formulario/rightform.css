@@ -281,6 +281,32 @@
   animation-delay: 1.5s;
 }
 
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-picker-dropdown
+  .ant-picker-panel-container
+  .ant-picker-panel-layout {
+  width: 200px;
+  font-size: 18px;
+}
+
+.ant-picker-time-panel {
+  width: 200px !important;
+}
+
+.ant-picker-time-panel-cell {
+  width: 100% !important;
+}
+
+.ant-picker-time-panel-cell-inner {
+  width: 100% !important;
+  align-items: center;
+  text-align: center;
+  padding-inline-start: 0px !important;
+}
+
+:where(.css-dev-only-do-not-override-1rqnfsa).ant-picker-dropdown .ant-picker-time-panel-column::after  {
+  height: auto;
+}
+
 @media screen and (max-width: 762px) {
   .rg-form {
     width: 90%;
