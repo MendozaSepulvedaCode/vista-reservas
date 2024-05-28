@@ -2,11 +2,63 @@ import "../../../styles/reservas/Principal/auxiliar.css";
 import { peticionForm } from "../../../utils/peticiones";
 import React, { useEffect, useState } from "react";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { BiCalendarCheck, BiBuildings } from "react-icons/bi";
+import {
+  BiCalendarCheck,
+  BiBuildings,
+  BiBadgeCheck,
+  BiTime,
+} from "react-icons/bi";
 import { LuUsers } from "react-icons/lu";
 import { message, Popover, Input } from "antd";
-import CardPropia from "./CardPropia";
 import Vacio from "./Vacio";
+import "../../../styles/reservas/Principal/profesor.css";
+
+function CardPropia({ reserva }) {
+  const fechaInicio = new Date(reserva.Fh_Ini);
+
+  const fechaISO = fechaInicio.toISOString();
+  const [fecha, horaUTC] = fechaISO.split("T");
+
+  const hora = horaUTC.slice(0, 5);
+
+  return (
+    <div className="card-propia">
+      <div className="head-propia">
+        <h6>{fecha}</h6>
+      </div>
+      <div className="content-propia">
+        <div className="icon-text">
+          <div>
+            <BiBadgeCheck /> {reserva.Nombre}
+          </div>
+          <div>
+            <LuUsers /> {reserva.Aforo}
+          </div>
+        </div>
+        <div className="icon-text">
+          <div>
+            <BiBuildings />
+            {reserva.ID_Espacio}
+          </div>
+          <div>
+            <BiTime />
+            {hora}
+          </div>
+        </div>
+        <div className="cnt-btn-cancelar">
+          <Popover
+            content={<PopoverContent reserva={reserva} />}
+            title="Reporte"
+            trigger="click"
+            placement="top"
+          >
+            <button className="btn-reporte-reserva">Reporte</button>
+          </Popover>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const { TextArea } = Input;
 

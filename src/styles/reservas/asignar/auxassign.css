@@ -86,8 +86,8 @@
 .block {
   display: flex;
   flex-direction: column;
-  height: 100px;
-  width: 200px;
+  height: 140px;
+  width: 210px;
   text-align: center;
   align-items: center;
   background-color: var(--gray-color);
@@ -156,13 +156,30 @@
 
 .head-assigment-time {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: center;
   padding: 10px;
+  margin-bottom: 10px;
+}
+
+.head-assigment-time svg {
+  color: var(--red-color);
+  font-size: 16px;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.head-assigment-time svg:hover {
+  opacity: 0.7;
+  transition: all 0.5s;
 }
 
 .head-assigment-time h6 {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
 }
 
 .head-assigment-time p {

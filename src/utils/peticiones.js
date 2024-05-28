@@ -39,7 +39,12 @@ export async function peticionForm(url, method, body = null) {
   }
 }
 
-export async function descargarReportes(uri, method, body = null, nombreReporte) {
+export async function descargarReportes(
+  uri,
+  method,
+  body = null,
+  nombreReporte
+) {
   try {
     const { secretParse } = await fetchTokenInfo();
 
@@ -53,7 +58,7 @@ export async function descargarReportes(uri, method, body = null, nombreReporte)
       headers: headers,
     };
 
-    if (body !== null) {
+    if (method !== "GET" && body !== null) {
       requestOptions.body = JSON.stringify(body);
     }
 

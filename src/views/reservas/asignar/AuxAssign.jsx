@@ -265,16 +265,6 @@ function AuxAssign({ auxInfo }) {
                   <div key={bloque.Bloque} className="block">
                     <div className="header-block">
                       <h5>{bloque.Bloque}</h5>
-                      {bloque.Asignaciones.map((asignacion) => (
-                        <MdOutlineDelete
-                          key={asignacion.ID_Asignacion_Bloque}
-                          onClick={() =>
-                            peticionDeleteAsignacion(
-                              asignacion.ID_Asignacion_Bloque
-                            )
-                          }
-                        />
-                      ))}
                     </div>
                     {bloque.Asignaciones.map((asignacion) => (
                       <div
@@ -282,14 +272,32 @@ function AuxAssign({ auxInfo }) {
                         className="assignment-details"
                       >
                         <div className="head-assigment-time">
-                          <h6>
-                            {asignacion.Horarios.Lunes ? "Horario L a V: " : ""}
-                            {asignacion.Horarios.Lunes}
-                          </h6>
-                          <h6>
-                            {asignacion.Horarios.Sábado ? "Sábado: " : ""}
-                            {asignacion.Horarios.Sábado}
-                          </h6>
+                          {asignacion.Horarios.Lunes && (
+                            <h6>
+                              Horario L a V: {asignacion.Horarios.Lunes}
+                              <MdOutlineDelete
+                                className="delete-icon"
+                                onClick={() =>
+                                  peticionDeleteAsignacion(
+                                    asignacion.ID_Asignacion_Bloque
+                                  )
+                                }
+                              />
+                            </h6>
+                          )}
+                          {asignacion.Horarios.Sábado && (
+                            <h6>
+                              Sábado: {asignacion.Horarios.Sábado}
+                              <MdOutlineDelete
+                                className="delete-icon"
+                                onClick={() =>
+                                  peticionDeleteAsignacion(
+                                    asignacion.ID_Asignacion_Bloque
+                                  )
+                                }
+                              />
+                            </h6>
+                          )}
                         </div>
                       </div>
                     ))}

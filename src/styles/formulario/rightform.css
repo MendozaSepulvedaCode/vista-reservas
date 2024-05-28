@@ -284,12 +284,12 @@
 :where(.css-dev-only-do-not-override-1rqnfsa).ant-picker-dropdown
   .ant-picker-panel-container
   .ant-picker-panel-layout {
-  width: 200px;
+  width: 280px;
   font-size: 18px;
 }
 
 .ant-picker-time-panel {
-  width: 200px !important;
+  width: 280px !important;
 }
 
 .ant-picker-time-panel-cell {

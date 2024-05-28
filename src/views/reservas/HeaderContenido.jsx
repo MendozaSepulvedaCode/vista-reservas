@@ -11,6 +11,7 @@ import { signOut } from "../../auth/authRedirect";
 import { descargarReportes } from "../../utils/peticiones";
 import UsoReserva from "./reportes/UsoReserva";
 import UsoEstados from "./reportes/UsoEstados";
+import HorariosMonitoria from "./reportes/HorariosMonitoria";
 
 const { confirm } = Modal;
 
@@ -21,6 +22,7 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [modalIsVisible2, setModalIsVisible2] = useState(false);
   const [modalEstado, setModalEstado] = useState(false);
+  const [modalMonitoria, setModalMonitoria] = useState(false);
   const userInitials = userData ? obtenerIniciales(userData.response.name) : "";
 
   const showDrawer = () => {
@@ -49,6 +51,14 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
     setModalVisible(false);
   };
 
+  const manejoModalMonitoria = () => {
+    setModalMonitoria(true);
+  };
+
+  const cancelModalMonitoria = () => {
+    setModalMonitoria(false);
+  };
+
   const reportModal = () => {
     setModalIsVisible(true);
   };
@@ -70,13 +80,6 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
   };
 
   const cancelEstado = () => {
-    setModalEstado(false);
-  };
-
-  const handleModalButtonClick = (action) => {
-    setModalVisible(false);
-    setModalIsVisible(false);
-    setModalIsVisible2(false);
     setModalEstado(false);
   };
 
@@ -175,7 +178,11 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
   ];
 
   const filteredItems = items.filter((item) => {
-    if (role === "Profesor" || role === "Estudiante" || role === "Aux_Administrativo") {
+    if (
+      role === "Profesor" ||
+      role === "Estudiante" ||
+      role === "Aux_Administrativo"
+    ) {
       return item.key === "Salir" || item.key === "Formulario";
     }
     return true;
@@ -185,13 +192,23 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
     <div className="head-cnt-page">
       <div className="search-head">
         {role === "Administrador" && (
-          <button className="btn-reports" onClick={handleReportButtonClick}>
-            Generar reportes
-          </button>
+          <div className="btns-actions">
+            <button className="btn-reports" onClick={handleReportButtonClick}>
+              Generar reportes
+            </button>
+            <button className="btn-monitoria" onClick={manejoModalMonitoria}>
+              Horarios monitoria
+            </button>
+          </div>
         )}
       </div>
       <div>
-        <img src={logo_utb} alt="utb" className="logo-utb" />
+        <img
+          src={logo_utb}
+          alt="utb"
+          className="logo-utb"
+          onClick={() => window.location.reload()}
+        />
       </div>
       <div className="user-head">
         <div
@@ -225,6 +242,14 @@ function HeaderContenido({ userData, loading, role, onItemClick }) {
           </Drawer>
         )}
       </div>
+      <Modal
+        title="Crear horarios monitoria"
+        open={modalMonitoria}
+        onCancel={cancelModalMonitoria}
+        footer={null}
+      >
+        <HorariosMonitoria />
+      </Modal>
       <Modal
         title="Selecciona una opción"
         open={modalVisible}

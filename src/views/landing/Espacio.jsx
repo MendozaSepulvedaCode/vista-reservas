@@ -3,22 +3,8 @@ import { Element } from "react-scroll";
 import Aulas from "../../assets/aulas.webp";
 import Auditorio from "../../assets/auditorio.webp";
 import Salas from "../../assets/salas-de-estudio.webp";
+import { Carousel } from "antd";
 import { signIn } from "../../auth/authRedirect";
-
-function CardEspacio({ titulo, parrafo, imagen }) {
-  return (
-    <div className="card-espacio">
-      <div
-        className="img-card"
-        style={{ backgroundImage: `url(${imagen})` }}
-      ></div>
-      <div className="info-card-reserva">
-        <h6>{titulo}</h6>
-        <p>{parrafo}</p>
-      </div>
-    </div>
-  );
-}
 
 function EspacioComponent() {
   const manejoInicioSesion = () => {
@@ -29,28 +15,36 @@ function EspacioComponent() {
     <Element name="espacios-utb">
       <section className="cnt-espacio">
         <div className="espacios-utb">
-          <h5>Conoce nuestros espacios para reserva</h5>
-          <div className="espacios-wrap">
-            <CardEspacio
-              imagen={Aulas}
-              titulo="Aulas de clase"
-              parrafo="Aula destinada a la enseñanza en la universidad. Equipado con asientos, computadoras, pizarras y video-beam."
-            />
-            <CardEspacio
-              imagen={Auditorio}
-              titulo="Auditorio"
-              parrafo="Espacio para eventos academicos y culturales, con asientos y tecnologia para presentaciones."
-            />
-            <CardEspacio
-              imagen={Salas}
-              titulo="Salas de reunion"
-              parrafo="Equipada con pizarras y sillas, ideal para tutoria y estudio privado."
-            />
+          <div className="carrousel-text">
+            <h6>Reserva nuestros espacios</h6>
+            <p>
+              Ofrecemos aulas equipadas con tecnologia de vanguardia para
+              garantizar un entorno academico optimo y enriquecedor, propicio
+              para el proceso de enseñanza - aprendizaje.
+            </p>
+            <p>
+              Nuestra infraestructura incluye todos los recursos necesarios para
+              que las reservas academicas de nuestros estudiantes sean altamente
+              satisfactorias y efectivas
+            </p>
+            <div className="cnt-btn-reservas">
+              <button className="btn-formulario" onClick={manejoInicioSesion}>
+                Quiero reservar un espacio
+              </button>
+            </div>
           </div>
-          <div className="cnt-btn-reservas">
-            <button className="btn-formulario" onClick={manejoInicioSesion}>
-              Quiero reservar un espacio
-            </button>
+          <div className="carrousel-ant-slick">
+            <Carousel autoplay>
+              <div className="item-carrousel">
+                <img src={Aulas} alt="Aulas" />
+              </div>
+              <div className="item-carrousel">
+                <img src={Auditorio} alt="Auditorio" />
+              </div>
+              <div className="item-carrousel">
+                <img src={Salas} alt="Salas de Estudio" />
+              </div>
+            </Carousel>
           </div>
         </div>
       </section>

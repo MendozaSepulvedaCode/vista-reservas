@@ -55,7 +55,11 @@ function CardReserva({ allResState }) {
 
   const currentDate = new Date().toISOString().slice(0, 10);
 
-  const filteredReservas = allResState.Reservas_Aca.filter(
+  const allReservas = allResState.Reservas_Aca.concat(
+    allResState.Reservas_NAca
+  );
+
+  const filteredReservas = allReservas.filter(
     (reserva) => reserva.Fecha_Inicio.split(" ")[0] === currentDate
   );
 
